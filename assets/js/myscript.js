@@ -1,5 +1,5 @@
 //api for contact
-$("#form1").submit(function(event) {
+$("#form1").submit(function (event) {
     event.preventDefault();
 
     $.ajax({
@@ -7,39 +7,45 @@ $("#form1").submit(function(event) {
         url: 'http://127.0.0.1:3000/api/contact',
         data: $('#form1').serialize(),
         dataType: "json",
-        beforeSend: function() {
+        beforeSend: function () {
             $(".main-btn").attr("disabled", true);
         },
-        success: function(response) {
+        success: function (response) {
             $('#form1')[0].reset();
             console.log(response);
             $("#check").html(response.Success).addClass("alert");
             $(".main-btn").attr("disabled", false);
         },
-        error: function() {}
+        error: function () { }
     })
 });
 //api for appointment
-$("#appointment").submit(function(event) {
+$("#appointment").submit(function (event) {
     event.preventDefault();
+    if (localStorage.getItem("token") == "undefined" || localStorage.getItem("token") == "") {
+        alert("You should Login first");
+        $('<a href="./authenticate.html" id="aa"></a>').appendTo("body");
+        document.getElementById("aa").click();
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: 'http://127.0.0.1:3000/api/appointment',
+            data: $('#appointment').serialize(),
+            dataType: "json",
+            beforeSend: function () {
+                $(".main-btn").attr("disabled", true);
+            },
+            success: function (response) {
 
-    $.ajax({
-        type: 'POST',
-        url: 'http://127.0.0.1:3000/api/appointment',
-        data: $('#appointment').serialize(),
-        dataType: "json",
-        beforeSend: function() {
-            $(".main-btn").attr("disabled", true);
-        },
-        success: function(response) {
-            $('#appointment')[0].reset();
-            console.log(response);
-            $("#check").html(response.Success).addClass("alert");
-            $(".main-btn").attr("disabled", false);
+                $('#appointment')[0].reset();
+                console.log(response);
+                $("#check").html(response.Success).addClass("alert");
+                $(".main-btn").attr("disabled", false);
+            },
+            error: function () { }
+        })
+    }
 
-        },
-        error: function() {}
-    })
 });
 
 
@@ -47,7 +53,7 @@ $("#appointment").submit(function(event) {
 
 
 //api for posting on forum
-$("#forumPost").submit(function(event) {
+$("#forumPost").submit(function (event) {
     event.preventDefault();
     var _form = $(this);
     var postForm = { //Fetch form data
@@ -62,20 +68,20 @@ $("#forumPost").submit(function(event) {
         url: 'http://127.0.0.1:3000/api/forumPost',
         data: postForm,
         dataType: "json",
-        beforeSend: function() {
+        beforeSend: function () {
             $(".main-btn").attr("disabled", true);
         },
-        success: function(response) {
+        success: function (response) {
             _form[0].reset();
             CKEDITOR.instances['editor2'].setData('');
             $("#check").html(response.Success).addClass("alert");
             $(".main-btn").attr("disabled", false);
         },
-        error: function() {}
+        error: function () { }
     })
 });
 
-$("#postComment").submit(function(event) {
+$("#postComment").submit(function (event) {
     event.preventDefault();
     var searchParams = new URLSearchParams(window.location.search);
     var forum_id = "";
@@ -95,10 +101,10 @@ $("#postComment").submit(function(event) {
         url: 'http://127.0.0.1:3000/api/post_comment',
         data: data,
         dataType: "json",
-        beforeSend: function() {
+        beforeSend: function () {
             $(".main-btn").attr("disabled", true);
         },
-        success: function(response) {
+        success: function (response) {
             _form[0].reset();
             console.log(response);
             $("#check").html(response.Success).addClass("alert");
@@ -112,7 +118,7 @@ $("#postComment").submit(function(event) {
             }
             $(".main-btn").attr("disabled", false);
         },
-        error: function() {
+        error: function () {
             alert('Login in first');
         }
     })
